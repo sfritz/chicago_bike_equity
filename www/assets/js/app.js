@@ -3,6 +3,7 @@
 var groceriesGeojson;
 var groceries;
 var groceriesLayer;
+var businesses;
 
 //global variables for groceries near divvy stations function
 var groceriesNearDivvy;
@@ -203,6 +204,23 @@ var groceryStoresCall = $.getJSON("data/grocery_stores_2013.geojson", function (
   //map.addLayer(groceriesLayer);
 });
 
+///////////////////////Active business licenses///////////
+businesses = L.geoJson(null, {
+  style: function(feature) {
+    return {
+      color: "blue",
+      fill: "blue",
+      opacity: 0.5,
+      fillOpacity: 0.5,
+      weight: 1.0,
+      clickable: false
+    };
+  }
+});
+$.getJSON("data/active_business_licenses.2015-04-28.geojson", function (data) {
+  businesses.addData(data);
+});
+
 ///////////////////////Begin divvyBuffers/////////////////
 
 //var divvyBuffers = [];
@@ -300,6 +318,7 @@ var wards = L.geoJson(null, {
     });
   }
 });
+
 $.getJSON("data/chicago_wards_2015.geojson", function (data) {
   wards.addData(data);
 });
@@ -451,7 +470,8 @@ var groupedOverlays = {
 	  "Bike Lanes": bikelanesLayer.layer,
     "Divvy Stations": divvyStations,
     "Population Density": populationLayer.layer,
-    "Hypertension Levels": hypertensionLayer.layer
+    "Hypertension Levels": hypertensionLayer.layer,
+    "Businesses": businesses
 	}
 };
 
