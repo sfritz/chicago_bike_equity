@@ -205,20 +205,18 @@ var groceryStoresCall = $.getJSON("data/grocery_stores_2013.geojson", function (
 });
 
 ///////////////////////Active business licenses///////////
-businesses = L.geoJson(null, {
-  style: function(feature) {
-    return {
-      color: "blue",
-      fill: "blue",
-      opacity: 0.5,
-      fillOpacity: 0.5,
-      weight: 1.0,
-      clickable: false
-    };
-  }
+var business_heat = L.heatLayer(null, {
+  radius: 25,
+  minOpacity: 0.25,
+  max: 0.75
 });
 $.getJSON("data/active_business_licenses.2015-04-28.geojson", function (data) {
-  businesses.addData(data);
+  var latLngs = [];
+  for (var i=0; i<data.features.length; i++) {
+    var lngLat = data.features[i].geometry.coordinates;
+    latLngs.push([lngLat[1], lngLat[0]]);
+  }
+  business_heat.setLatLngs(latLngs);
 });
 
 ///////////////////////Begin divvyBuffers/////////////////
@@ -471,7 +469,7 @@ var groupedOverlays = {
     "Divvy Stations": divvyStations,
     "Population Density": populationLayer.layer,
     "Hypertension Levels": hypertensionLayer.layer,
-    "Businesses": businesses
+    "Businesses": business_heat
 	}
 };
 
